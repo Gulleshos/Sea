@@ -2,6 +2,8 @@ import { Form, FormSelect, FormInput, FormTextarea } from "@/components/forms/Fo
 import { TIMES } from "@/lib/constants";
 
 export function CreateAppointmentForm({ handleSubmit, patients, doctors }) {
+    const filteredDoctors = doctors.filter(doctor => doctor.accessLevel === 'doctor');
+
     return (
         <Form handleSubmit={handleSubmit} formId="appointmentForm">
             <FormSelect required={true} name="patientId" defaultValue="Patient ID">
@@ -12,7 +14,7 @@ export function CreateAppointmentForm({ handleSubmit, patients, doctors }) {
                 ))}
             </FormSelect>
             <FormSelect required={true} name="doctorId" defaultValue="Doctor ID">
-                {doctors.map((doctor) => (
+                {filteredDoctors.map((doctor) => (
                     <option key={doctor.doctorId} value={doctor.doctorId}>
                         {doctor.doctorId}
                     </option>

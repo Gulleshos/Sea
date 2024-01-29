@@ -1,20 +1,23 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAppContext } from "@/lib/context/ContextProvider";
-import Image from "next/image";
 import { Modal, Button } from "..";
 import { getDoctors } from "@/lib/actions/doctor";
 import { getPatients, getPatientsByDoctor } from "@/lib/actions/patient";
 import { getEvents } from "@/lib/actions/event";
-
-import { SearchIcon, PersonIcon, PatientCardIcon, EventIcon } from "../../../public/icons";
+import Image from "next/image";
+import Link from "next/link";
+import {
+    SearchIcon,
+    PersonIcon,
+    PatientCardIcon,
+    EventIcon,
+} from "../../../public/icons";
 import ModalTitle from "./ModalTitle";
 
-const SearchModal = ({ user }) => {
-    const router = useRouter();
-    const { isSearchModalOpen, closeSearchModal } = useAppContext();
 
+const SearchModal = ({ user }) => {
+    const { isSearchModalOpen, closeSearchModal } = useAppContext();
     const [matchItems, setMatchItems] = useState([]);
     const [searchId, setSearchId] = useState("");
 
@@ -31,6 +34,7 @@ const SearchModal = ({ user }) => {
                         id: item.doctorId,
                         type: "Doctor",
                         name: `${item.firstName} ${item.lastName}`,
+                        url: `/doctors/${item.doctorId}`,
                     })
                 );
 
@@ -43,6 +47,7 @@ const SearchModal = ({ user }) => {
                         id: item.patientId,
                         type: "Patient",
                         name: `${item.firstName} ${item.lastName}`,
+                        url: `/patients/${item.patientId}`,
                     })
                 );
             }
@@ -56,6 +61,7 @@ const SearchModal = ({ user }) => {
                         id: item.patientId,
                         type: "Patient",
                         name: `${item.firstName} ${item.lastName}`,
+                        url: `/patients/${item.patientId}`,
                     })
                 );
             }
@@ -65,7 +71,11 @@ const SearchModal = ({ user }) => {
                 item.eventId.includes(searchId)
             );
             events.forEach((item) =>
-                matchDat.push({ id: item.eventId, type: "Event", name: `${item.title}` })
+                matchDat.push({
+                    id: item.eventId,
+                    type: "Event",
+                    name: `${item.title}`,
+                })
             );
         } catch (error) {
             console.log(error);
@@ -79,26 +89,13 @@ const SearchModal = ({ user }) => {
         e.preventDefault();
         const cleared = [];
         setMatchItems(cleared);
-
         await matchData();
-    };
-
-    const handleRoute = (item) => {
-        if (item.type === "Patient") {
-            router.push(`/patients/${item.id}`);
-        }
-        if (item.type === "Doctor") {
-            router.push(`/doctors/${item.id}`);
-        }
-        if (item.type === "Event") {
-            router.push("/events");
-        }
     };
 
     return (
         <Modal isOpen={isSearchModalOpen}>
             <ModalTitle title="Search">
-                <SearchIcon className="h-7 stroke-primary stroke-[3px]" />
+                <SearchIcon className="h-6 stroke-primary stroke-[3px]" />
             </ModalTitle>
 
             <form onSubmit={handleSubmit} id="searchForm">
@@ -117,28 +114,31 @@ const SearchModal = ({ user }) => {
             <div className="overflow-auto max-h-[500px]">
                 {matchItems &&
                     matchItems.map((item) => (
-                        <div
-                            key={item.id}
-                            className="text-base lg:text-xl px-5 py-3 mb-5 w-full border
+                        <Link href={item.url} key={item.id}>
+                            <div
+                                className="text-base lg:text-xl px-5 py-3 mb-5 w-full border cursor-pointer
                         border-lightGray rounded-2xl hover:bg-secondary flex"
-                            onClick={() => handleRoute(item.type)}
-                        >
-                            <span className="mr-3">{item.type}</span>
-                            <span className="underline decoration-1 flex-1">
-                                {item.name ? item.name.slice(0, 10) : item.id.slice(0, 10)}
-                            </span>
-                            <span className="">
-                                {item.type === "Patient" && (
-                                    <PatientCardIcon className="h-7 stroke-primary stroke-[3px]" />
-                                )}
-                                {item.type === "Doctor" && (
-                                    <PersonIcon className="h-7 stroke-primary stroke-[3px]" />
-                                )}
-                                {item.type === "Event" && (
-                                    <EventIcon className="h-7 stroke-primary stroke-[3px]" />
-                                )}
-                            </span>
-                        </div>
+                                onClick={closeSearchModal}
+                            >
+                                <span className="mr-3">{item.type}</span>
+                                <span className="underline decoration-1 flex-1">
+                                    {item.name
+                                        ? item.name.slice(0, 10)
+                                        : item.id.slice(0, 10)}
+                                </span>
+                                <span>
+                                    {item.type === "Patient" && (
+                                        <PatientCardIcon className="h-7 stroke-primary stroke-[3px]" />
+                                    )}
+                                    {item.type === "Doctor" && (
+                                        <PersonIcon className="h-7 stroke-primary stroke-[3px]" />
+                                    )}
+                                    {item.type === "Event" && (
+                                        <EventIcon className="h-7 stroke-primary stroke-[3px]" />
+                                    )}
+                                </span>
+                            </div>
+                        </Link>
                     ))}
                 {matchItems.length === 0 && (
                     <div className="flex flex-col items-center gap-3 mb-5">

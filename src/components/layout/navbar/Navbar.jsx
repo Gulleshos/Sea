@@ -33,7 +33,7 @@ export default function Navbar() {
 
     return (
         <header
-            className="h-14 w-full p-3 flex justify-between items-center flex-row-reverse sm:flex-row 
+            className="h-16 w-full p-3 flex justify-between items-center flex-row-reverse sm:flex-row 
             bg-secondary sm:rounded-bl-2xl"
         >
             <div className="w-8 cursor-pointer" onClick={handleGoBack}>

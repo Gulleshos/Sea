@@ -7,7 +7,7 @@ export default function Events() {
     const { data: events, isLoading } = useEvent();
 
     return (
-        <main className="w-full h-full flex flex-col gap-20 lg:gap-40 items-center overflow-auto">
+        <main className="w-full h-full flex flex-col gap-10 items-center overflow-auto">
             {isLoading && <Loading />}
             {!isLoading &&
                 events &&

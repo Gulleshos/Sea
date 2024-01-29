@@ -6,7 +6,7 @@ import { APPOINTMENTS_OF_PATIENT_TABLE_TITLES } from "@/lib/constants";
 export default function AppointmentsSection({ data }) {
     const { openAppointmentModal } = useAppContext();
     return (
-        <>
+        <div className="overflow-auto">
             <Table titles={APPOINTMENTS_OF_PATIENT_TABLE_TITLES}>
                 {data.map((appointment) => (
                     <TableRow
@@ -17,6 +17,6 @@ export default function AppointmentsSection({ data }) {
                     />
                 ))}
             </Table>
-        </>
+        </div>
     );
 }

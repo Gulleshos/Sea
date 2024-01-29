@@ -15,11 +15,12 @@ export const FormSelect = ({ name, defaultValue, required, children }) => {
     );
 };
 
-export const FormInput = ({ type, name, required, placeholder }) => {
+export const FormInput = ({ type,value, name, required, placeholder }) => {
     return (
         <input
             type={type}
             name={name}
+            value={value}
             placeholder={placeholder}
             required={required}
             className="text-base lg:text-xl px-4 py-2 mb-4 w-full border border-lightGray rounded-2xl"
@@ -32,7 +33,7 @@ export const FormTextarea = ({ name, placeholder }) => {
         <textarea
             name={name}
             placeholder={placeholder}
-            className="text-base lg:text-xl px-4 py-2 w-full h-30 mb-4 resize-none overflow-y-auto border border-lightGray rounded-2xl"
+            className="text-base lg:text-xl px-4 py-2 w-full h-28 mb-4 resize-none overflow-y-auto border border-lightGray rounded-2xl"
         />
     );
 };

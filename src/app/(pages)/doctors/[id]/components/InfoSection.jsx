@@ -2,8 +2,38 @@
 import Image from "next/image";
 import calculateAge from "@/lib/calculateAge";
 import dateFormatter from "@/lib/dateFormatter";
+import { Button } from "@/components";
+import { useAppContext } from "@/lib/context/ContextProvider";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-export default function InfoSection({ data }) {
+export default function InfoSection({
+    accessLevel,
+    data,
+    deleteDoctor,
+    removeDoctorFromPatient,
+    removeAppointmentsByDoctor,
+    removeAppointmentsByDoctorFromPatient,
+}) {
+    const { openUpdateModal } = useAppContext();
+    const router = useRouter();
+
+    const handleDelete = () => {
+        const question = confirm(
+            `Are you sure you want to delete #${data.doctorId}?`
+        );
+        if (question) {
+            deleteDoctor(data.doctorId);
+            removeDoctorFromPatient(data.doctorId);
+            removeAppointmentsByDoctor(data.doctorId);
+            removeAppointmentsByDoctorFromPatient(data.doctorId);
+            router.back();
+            router.refresh();
+            toast.success("The doctor was deleted!", {
+                position: "bottom-center",
+            });
+        }
+    };
     return (
         <>
             <div className="h-full w-full flex flex-col ">
@@ -28,7 +58,22 @@ export default function InfoSection({ data }) {
                     </p>
                 </div>
                 <div className="h-px w-[cals(100%-60px)] mx-5 bg-lightGray rounded-standart" />
-                <h3 className="text-xl lg:text-2xl font-medium my-3 text-center">Information:</h3>
+                <div className="flex justify-center gap-12">
+                    {accessLevel === "admin" && (
+                        <>
+                            <Button type="action" onClick={openUpdateModal}>
+                                Update
+                            </Button>
+                            <Button type="action" onClick={handleDelete}>
+                                Delete
+                            </Button>
+                        </>
+                    )}
+                </div>
+
+                <h3 className="text-xl lg:text-2xl font-medium my-3 text-center">
+                    Information:
+                </h3>
 
                 <div className="h-full grid grid-cols-[110px_1fr] gap-5 overflow-auto">
                     <p className="font-medium">Doctor ID:</p>

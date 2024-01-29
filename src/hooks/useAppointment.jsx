@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import {
     getAppointments,
+    getUpcomingAppointments,
     getAppointmentsByDoctor,
     getAppointmentsByPatien,
     addNewAppointment,
@@ -18,14 +19,22 @@ export default function useAppointment(id, queryBy) {
 
     useEffect(() => {
         const fetchData = async () => {
+            let response = null;
             try {
-                const response = !id
-                    ? await getAppointments()
-                    : queryBy === "doctor"
-                    ? await getAppointmentsByDoctor(id)
-                    : queryBy === "patient"
-                    ? await getAppointmentsByPatien(id)
-                    : null;
+                switch (queryBy) {
+                    case "upcoming":
+                        response = await getUpcomingAppointments();
+                        break;
+                    case "doctor":
+                        response = await getAppointmentsByDoctor(id);
+                        break;
+                    case "patient":
+                        response = await getAppointmentsByPatien(id);
+                        break;
+                    default:
+                        response = await getAppointments();
+                }
+
                 setData(response ? JSON.parse(response) : null);
             } catch (error) {
                 setError(error);
@@ -62,7 +71,8 @@ export default function useAppointment(id, queryBy) {
         await addNewAppointment(newAppointment);
         if (
             !doctor.patients.find(
-                (doctorsPatient) => patient.patientId === doctorsPatient.patientId
+                (doctorsPatient) =>
+                    patient.patientId === doctorsPatient.patientId
             )
         ) {
             await addPatientToDoctor(doctor.doctorId, {
@@ -72,7 +82,9 @@ export default function useAppointment(id, queryBy) {
         }
 
         if (
-            !patient.doctors.find((patientsDoctor) => doctor.doctorId === patientsDoctor.doctorId)
+            !patient.doctors.find(
+                (patientsDoctor) => doctor.doctorId === patientsDoctor.doctorId
+            )
         ) {
             await addDoctorToPatient(patient.patientId, {
                 doctorId: doctor.doctorId,

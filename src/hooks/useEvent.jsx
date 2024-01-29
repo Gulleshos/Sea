@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getEvents, getTodayEvent, addNewEvent } from "@/lib/actions/event";
+import { getEvents, addNewEvent } from "@/lib/actions/event";
 
 export default function useEvent(queryBy) {
     const [data, setData] = useState(null);
@@ -10,7 +10,10 @@ export default function useEvent(queryBy) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = queryBy === "today" ? await getTodayEvent() : await getEvents();
+                const response =
+                    queryBy === "today"
+                        ? await getTodayEvent()
+                        : await getEvents();
                 setData(response ? JSON.parse(response) : null);
             } catch (error) {
                 setError(error);
@@ -21,7 +24,7 @@ export default function useEvent(queryBy) {
         fetchData();
     }, []);
 
-    const createEvent = async ({ formData }) => {
+    const createEvent = async (formData) => {
         const newEvent = {
             title: formData.get("title"),
             date: formData.get("date"),

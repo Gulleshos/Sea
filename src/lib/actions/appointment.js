@@ -8,7 +8,30 @@ export const getAppointments = async () => {
     try {
         await connectDB();
         const data = await Appointments.find();
-        return (data.length !== 0) ? JSON.stringify(data) : null;
+        return data.length !== 0 ? JSON.stringify(data) : null;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getUpcomingAppointments = async (userId) => {
+    const currentDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(currentDate.getDate() + 7);
+
+    const appointmentFilter = userId
+        ? {
+              $match: {
+                  date: { $gte: currentDate, $lte: endDate },
+                  "doctor.doctorId": userId,
+              },
+          }
+        : { $match: { date: { $gte: currentDate, $lte: endDate } } };
+        
+    try {
+        await connectDB();
+        const data = await Appointments.aggregate([appointmentFilter]);
+        return data.length > 0 ? JSON.stringify(data) : null;
     } catch (error) {
         console.log(error);
     }
@@ -18,7 +41,7 @@ export const getAppointmentsByDoctor = async (id) => {
     try {
         await connectDB();
         const data = await Appointments.find({ "doctor.doctorId": id });
-        return (data.length !== 0) ? JSON.stringify(data) : null;
+        return data.length !== 0 ? JSON.stringify(data) : null;
     } catch (error) {
         console.log(error);
     }
@@ -28,7 +51,7 @@ export const getAppointmentsByPatien = async (id) => {
     try {
         await connectDB();
         const data = await Appointments.find({ "patient.patientId": id });
-        return (data.length !== 0) ? JSON.stringify(data) : null;
+        return data.length !== 0 ? JSON.stringify(data) : null;
     } catch (error) {
         console.log(error);
     }
@@ -81,7 +104,30 @@ export const addNewAppointment = async (appointment) => {
 export const addNewReport = async (appointmentId, report) => {
     try {
         await connectDB();
-        await Appointments.findOneAndUpdate({ appointmentId: appointmentId }, report);
+        await Appointments.findOneAndUpdate(
+            { appointmentId: appointmentId },
+            report
+        );
+        return { success: true };
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const removeAppointmentsByDoctor = async (id) => {
+    try {
+        await connectDB();
+        await Appointments.deleteMany({ "doctor.doctorId": id });
+        return { success: true };
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const removeAppointmentsByPatient = async (id) => {
+    try {
+        await connectDB();
+        await Appointments.deleteMany({ "patient.patientId": id });
         return { success: true };
     } catch (error) {
         console.log(error);

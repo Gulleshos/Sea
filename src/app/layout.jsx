@@ -12,6 +12,7 @@ import {
     AppointmentModal,
     CreateEntityModal,
 } from "@/components";
+import { Toaster } from "sonner";
 
 const montserrat = Montserrat({ subsets: ["latin", "cyrillic"] });
 
@@ -28,14 +29,14 @@ export default async function RootLayout({ children }) {
                 <SessionProvider session={session}>
                     <body className={montserrat.className}>
                         <div className="flex gap-3 h-[100svh] overflow-hidden">
-                            <div className="hidden sm:flex flex-col gap-3 w-14">
+                            <div className="hidden sm:flex flex-col gap-3 w-16">
                                 <Logo />
 
                                 <div className="h-full overflow-hidden">
                                     <Sidebar />
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-3 flex-1 w-full">
+                            <div className="flex flex-col flex-1 w-full gap-3">
                                 <Navbar />
 
                                 <div className="flex-1 sm:mb-3 sm:mr-3 overflow-auto">
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }) {
                                 </div>
                             </div>
                         </div>
+                        <Toaster richColors/>
                     </body>
                 </SessionProvider>
             </AppProvider>

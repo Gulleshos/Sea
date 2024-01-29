@@ -22,7 +22,7 @@ export default async function Patients() {
     const session = await getSession();
     const patients = await fetchData(session.user.accessLevel);
     return (
-        <main className="w-full h-full">
+        <main className="w-full h-full px-2 sm:px-0">
             <Section styles="w-full h-full overflow-auto">
                 <Suspense fallback={<Loading />}>
                     {patients !== null ? <PatientsTable data={patients} /> : <NoData />}

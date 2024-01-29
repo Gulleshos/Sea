@@ -9,13 +9,12 @@ import Section from "./Section";
 import ContentSection from "./ContentSection";
 import Table from "./table/Table";
 import TableRow from "./table/TableRow";
+import Pagination from "./table/Pagination";
 import Button from "./Button";
 import AppointmentModal from "./modals/AppointmentModal";
 import Modal from "./modals/Modal";
 import CreateEntityModal from "./modals/CreateEntityModal";
 import SearchModal from "./modals/SearchModal";
-
-
 
 
 export {
@@ -30,6 +29,7 @@ export {
     ContentSection,
     Table,
     TableRow,
+    Pagination,
     Button,
     AppointmentModal,
     Modal,

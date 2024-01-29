@@ -1,27 +1,16 @@
 import {
-    SET_USER,
     SET_CREATE_ENTITY_TYPE,
-    OPEN_MODAL,
-    CLOSE_MODAL,
-    OPEN_ALERT,
-    CLOSE_ALERT,
     OPEN_SEARCH_MODAL,
     CLOSE_SEARCH_MODAL,
     OPEN_CREATE_ENTITY_MODAL,
     CLOSE_CREATE_ENTITY_MODAL,
     OPEN_APPOINTMENT_MODAL,
     CLOSE_APPOINTMENT_MODAL,
+    OPEN_UPDATE_MODAL,
+    CLOSE_UPDATE_MODAL,
 } from "./actions";
 
 const reducer = (state, action) => {
-
-    if (action.type === SET_USER) {
-        return {
-            ...state,
-            user: action.payload,
-        };
-    }
-
     if (action.type === SET_CREATE_ENTITY_TYPE) {
         return {
             ...state,
@@ -29,19 +18,6 @@ const reducer = (state, action) => {
         };
     }
 
-    if (action.type === OPEN_MODAL) {
-        return {
-            ...state,
-            isModalOpen: true,
-        };
-    }
-
-    if (action.type === CLOSE_MODAL) {
-        return {
-            ...state,
-            isModalOpen: false,
-        };
-    }
     if (action.type === OPEN_SEARCH_MODAL) {
         return {
             ...state,
@@ -70,24 +46,6 @@ const reducer = (state, action) => {
         };
     }
 
-    if (action.type === OPEN_ALERT) {
-        return {
-            ...state,
-            isAlertOpen: true,
-            alertType: action.payload.type,
-            alertMessage: action.payload.message,
-        };
-    }
-
-    if (action.type === CLOSE_ALERT) {
-        return {
-            ...state,
-            isAlertOpen: false,
-            alertType: "warning",
-            alertMessage: "-",
-        };
-    }
-
     if (action.type === OPEN_APPOINTMENT_MODAL) {
         return {
             ...state,
@@ -104,6 +62,19 @@ const reducer = (state, action) => {
         };
     }
 
+    if (action.type === OPEN_UPDATE_MODAL) {
+        return {
+            ...state,
+            isUpdateModalOpen: true
+        };
+    }
+
+    if (action.type === CLOSE_UPDATE_MODAL) {
+        return {
+            ...state,
+            isUpdateModalOpen: false
+        };
+    }
     throw new Error(`no such action: ${action.type}`);
 };
 

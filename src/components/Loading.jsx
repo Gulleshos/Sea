@@ -2,7 +2,7 @@ export default function Loading() {
     return (
         <div className="flex flex-col md:flex-row gap-5 justify-center items-center">
             <svg
-                ariaHidden="true"
+                aria-hidden="true"
                 className="w-14 h-14 animate-spin"
                 viewBox="0 0 100 101"
                 fill="none"

@@ -14,16 +14,19 @@ const fetchData = async () => {
 };
 
 export default async function Doctors() {
-    const doctorsData = await fetchData();
     const session = await getSession();
+    const doctorsData = await fetchData();
 
     if (session.user.accessLevel === "doctor") {
         return <NoAccess />;
     }
 
-    if (session.user.accessLevel === "admin" || session.user.accessLevel === "chief") {
+    if (
+        session.user.accessLevel === "admin" ||
+        session.user.accessLevel === "chief"
+    ) {
         return (
-            <main className="w-full h-full">
+            <main className="w-full h-full px-2 sm:px-0">
                 <Section styles="w-full h-full overflow-auto">
                     <Suspense fallback={<Loading />}>
                         {doctorsData !== null ? (

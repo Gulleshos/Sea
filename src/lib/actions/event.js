@@ -12,17 +12,19 @@ export const getEvents = async () => {
     }
 };
 
-export const getTodayEvent = async () => {
+export const getUpcomingEvents = async () => {
     const currentDate = new Date();
+    const endDate = new Date();
+    endDate.setDate(currentDate.getDate() + 7);
+
     try {
         await connectDB();
-        const data = await Events.findOne({ date:  { $gte: currentDate } });
-        return data ? JSON.stringify(data) : null;
+        const data = await Events.aggregate([{ $match: { date: { $gte: currentDate, $lte: endDate }}}, {$limit: 2}]);
+        return data.length > 0 ? JSON.stringify(data) : null;
     } catch (error) {
         console.log(error);
     }
-};
-
+};  
 
 export const addNewEvent = async (event) => {
     let eventId;

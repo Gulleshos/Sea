@@ -1,8 +1,8 @@
 export default function Section({ children, styles }) {
     return (
         <section
-            className={`${styles} p-4 2xl:p-6 w-full border-x border-t border-b-[3px]
-            rounded-2xl bg-white border-lightGray`}
+            className={`${styles} p-4 sm:p-6 w-full rounded-2xl 
+            border border-r-2 border-b-[3px] border-lightGray`}
         >
             {children}
         </section>

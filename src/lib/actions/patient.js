@@ -54,10 +54,48 @@ export const addNewPatient = async (patient) => {
     }
 };
 
+export const updatePatient = async (id, updatedPatient) => {
+    try {
+        await connectDB();
+        await Patients.findOneAndUpdate({ patientId: id }, updatedPatient);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const deletePatient = async (id) => {
+    try {
+        await connectDB();
+        await Patients.deleteOne({ patientId: id });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const addDoctorToPatient = async (id, newDoctor) => {
     try {
         await connectDB();
         await Patients.findOneAndUpdate({ patientId: id }, {$push: { doctors: newDoctor }});
+        return { success: true };
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const removeDoctorFromPatient = async (doctorId) => {
+    try {
+        await connectDB();
+        await Patients.updateMany({ }, {$pull: { doctors: {doctorId: doctorId} }});
+        return { success: true };
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const removeAppointmentsByDoctorFromPatient = async (doctorId) => {
+    try {
+        await connectDB();
+        await Patients.updateMany({ }, {$pull: { appointments: {doctorId: doctorId} }});
         return { success: true };
     } catch (error) {
         console.log(error);

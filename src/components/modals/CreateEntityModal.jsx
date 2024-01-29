@@ -4,6 +4,7 @@ import useDoctor from "@/hooks/useDoctor";
 import usePatient from "@/hooks/usePatient";
 import useAppointment from "@/hooks/useAppointment";
 import useEvent from "@/hooks/useEvent";
+import { toast } from "sonner";
 
 import { Button, Modal } from "@/components";
 import ModalTitle from "./ModalTitle";
@@ -22,6 +23,7 @@ import { CreatePatientForm } from "@/components/forms/CreateForms/CreatePatientF
 import { CreateDoctorForm } from "@/components/forms/CreateForms/CreateDoctorForm";
 import { CreateEventForm } from "@/components/forms/CreateForms/CreateEventForm";
 import { FormButtons } from "@/components/forms/FormComponents";
+import { useRouter } from "next/navigation";
 
 export default function CreateEntityModal({ accessLevel }) {
     const { data: doctors, createDoctor } = useDoctor();
@@ -32,25 +34,30 @@ export default function CreateEntityModal({ accessLevel }) {
         createReport,
     } = useAppointment();
     const { createEvent } = useEvent();
+    const router = useRouter();
 
     const {
         isCreateEntityModalOpen,
         setCreateEntityType,
         createEntityType,
-        openAlert,
         closeCreateEntityModal,
     } = useAppContext();
 
     const handleSubmit = async (formData) => {
-        switch (createType) {
+        switch (createEntityType) {
             case "report": {
                 try {
                     await createReport(formData);
                     closeCreateEntityModal();
-                    openAlert("success", "The report was added!");
+                    toast.success("The report was added!", {
+                        position: "bottom-center",
+                    });
                     setCreateEntityType(null);
+                    router.refresh();
                 } catch (error) {
-                    openAlert("error", "Something went wrong!");
+                    toast.error("Something went wrong!", {
+                        position: "bottom-center",
+                    });
                     console.log(error);
                 }
                 break;
@@ -62,16 +69,22 @@ export default function CreateEntityModal({ accessLevel }) {
                 const filteredDoctors = doctors.filter(
                     (doctor) => doctor.accessLevel === "doctor"
                 );
+
                 const doctor = filteredDoctors.find(
                     (doctor) => doctor.doctorId === formData.get("doctorId")
                 );
                 try {
                     await createAppointment(patient, doctor, formData);
                     closeCreateEntityModal();
-                    openAlert("success", "The appointment was added!");
+                    toast.success("The appointment was added!", {
+                        position: "bottom-center",
+                    });
                     setCreateEntityType(null);
+                    router.refresh();
                 } catch (error) {
-                    openAlert("error", "Something went wrong!");
+                    toast.error("Something went wrong!", {
+                        position: "bottom-center",
+                    });
                     console.log(error);
                 }
                 break;
@@ -80,10 +93,15 @@ export default function CreateEntityModal({ accessLevel }) {
                 try {
                     await createPatient(formData);
                     closeCreateEntityModal();
-                    openAlert("success", "The patient was added!");
+                    toast.success("The patient was added!", {
+                        position: "bottom-center",
+                    });
                     setCreateEntityType(null);
+                    router.refresh();
                 } catch (error) {
-                    openAlert("error", "Something went wrong!");
+                    toast.error("Something went wrong!", {
+                        position: "bottom-center",
+                    });
                     console.log(error);
                 }
                 break;
@@ -92,10 +110,15 @@ export default function CreateEntityModal({ accessLevel }) {
                 try {
                     await createDoctor(formData);
                     closeCreateEntityModal();
-                    openAlert("success", "The doctor was added!");
+                    toast.success("The doctor was added!", {
+                        position: "bottom-center",
+                    });
                     setCreateEntityType(null);
+                    router.refresh();
                 } catch (error) {
-                    openAlert("error", "Something went wrong!");
+                    toast.error("Something went wrong!", {
+                        position: "bottom-center",
+                    });
                     console.log(error);
                 }
                 break;
@@ -104,10 +127,15 @@ export default function CreateEntityModal({ accessLevel }) {
                 try {
                     await createEvent(formData);
                     closeCreateEntityModal();
-                    openAlert("success", "The event was added!");
+                    toast.success("The event was added!", {
+                        position: "bottom-center",
+                    });
                     setCreateEntityType(null);
+                    router.refresh();
                 } catch (error) {
-                    openAlert("error", "Something went wrong!");
+                    toast.error("Something went wrong!", {
+                        position: "bottom-center",
+                    });
                     console.log(error);
                 }
                 break;
@@ -125,7 +153,7 @@ export default function CreateEntityModal({ accessLevel }) {
             {!createEntityType && (
                 <>
                     <ModalTitle title="Add new">
-                        <CrossIcon className="h-7 stroke-primary stroke-[3px]" />
+                        <CrossIcon className="h-6 stroke-primary stroke-[3px]" />
                     </ModalTitle>
                     <div className="h-full max-h-[500px] 2xl:max-h-[700px] overflow-auto">
                         <ChooseCreateTypeForm
@@ -143,7 +171,7 @@ export default function CreateEntityModal({ accessLevel }) {
             {createEntityType === "appointment" && doctors && patients && (
                 <>
                     <ModalTitle title="Add new appointment">
-                        <TabletIcon className="h-7 stroke-primary stroke-[3px]" />
+                        <TabletIcon className="h-6 stroke-primary stroke-[3px]" />
                     </ModalTitle>
                     <div className="max-h-[400px] 2xl:max-h-[500px] overflow-auto">
                         <CreateAppointmentForm
@@ -161,7 +189,7 @@ export default function CreateEntityModal({ accessLevel }) {
             {createEntityType === "report" && doctors && patients && (
                 <>
                     <ModalTitle title="Add new report">
-                        <TabletIcon className="h-7 stroke-primary stroke-[3px]" />
+                        <TabletIcon className="h-6 stroke-primary stroke-[3px]" />
                     </ModalTitle>
                     <div className="max-h-[300px] 2xl:max-h-[400px] overflow-auto">
                         <CreateReportForm
@@ -178,7 +206,7 @@ export default function CreateEntityModal({ accessLevel }) {
             {createEntityType === "patient" && (
                 <>
                     <ModalTitle title="Add new patient">
-                        <PatientCardIcon className="h-7 stroke-primary stroke-[3px]" />
+                        <PatientCardIcon className="h-6 stroke-primary stroke-[3px]" />
                     </ModalTitle>
                     <div className="max-h-[300px] 2xl:max-h-[400px] overflow-auto">
                         <CreatePatientForm handleSubmit={handleSubmit} />
@@ -192,10 +220,13 @@ export default function CreateEntityModal({ accessLevel }) {
             {createEntityType === "doctor" && (
                 <>
                     <ModalTitle title="Add new doctor">
-                        <PersonIcon className="h-7 stroke-primary stroke-[3px]" />
+                        <PersonIcon className="h-6 stroke-primary stroke-[3px]" />
                     </ModalTitle>
                     <div className="max-h-[300px] 2xl:max-h-[400px] overflow-auto">
-                        <CreateDoctorForm handleSubmit={handleSubmit} />
+                        <CreateDoctorForm
+                            handleSubmit={handleSubmit}
+                            accessLevel={accessLevel}
+                        />
                     </div>
                     <FormButtons
                         onClick={handleCloseModal}
@@ -206,7 +237,7 @@ export default function CreateEntityModal({ accessLevel }) {
             {createEntityType === "event" && (
                 <>
                     <ModalTitle title="Add new event">
-                        <EventIcon className="h-7 stroke-primary stroke-[3px]" />
+                        <EventIcon className="h-6 stroke-primary stroke-[3px]" />
                     </ModalTitle>
                     <div className="max-h-[300px] 2xl:max-h-[400px] overflow-auto">
                         <CreateEventForm handleSubmit={handleSubmit} />
